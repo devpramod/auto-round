@@ -221,12 +221,12 @@ def build_quant_command(cfg: dict, model: str, job_id: str, background: bool = F
     --output_dir {output_dir}"""
 
     if background:
-        # Use nohup for background execution
+        # Use nohup + disown for background execution (disown prevents SSH from waiting)
         full_cmd = f"""
 cd {working_dir} && \\
 source {venv}/bin/activate && \\
 mkdir -p {paths.get('log_dir', './logs')} {paths['output_dir']} && \\
-{env_str}nohup bash -c '{quant_cmd} 2>&1 | tee {log_file}' > /dev/null 2>&1 &
+{env_str}nohup bash -c '{quant_cmd} 2>&1 | tee {log_file}' > /dev/null 2>&1 & disown
 echo "Job started in background"
 echo "Log file: {log_file}"
 """
@@ -432,15 +432,37 @@ def main():
         print("\nJob failed!")
         return 1
 
+    # Build output path info
+    paths = cfg["remote_paths"]
+    working_dir = paths['working_dir']
+    output_dir = paths['output_dir']
+    # Clean up relative paths (./output -> output)
+    if output_dir.startswith("./"):
+        output_dir = output_dir[2:]
+    remote_output = f"{working_dir}/{output_dir}/{job_id}"
+
     print("\n" + "=" * 60)
-    print("JOB COMPLETED SUCCESSFULLY")
+    print("QUANTIZATION COMPLETE!")
     print("=" * 60)
+    print(f"\nQuantized weights stored on remote server:")
+    print(f"  {remote_output}/")
+    print()
 
     # Transfer weights
     if not args.skip_transfer and cfg.get("transfer", {}).get("compress", True):
         archive = compress_weights(cfg, job_id)
         if archive:
+            local_dir = Path(cfg["local"]["output_dir"]).expanduser()
             transfer_weights(cfg, job_id, archive)
+            print("\n" + "=" * 60)
+            print("TRANSFER COMPLETE!")
+            print("=" * 60)
+            print(f"\nQuantized weights available locally at:")
+            print(f"  {local_dir.absolute()}/output/{job_id}/")
+            print()
+    else:
+        print("Skipping transfer. Use --skip-transfer=false to download weights.")
+        print()
 
     return 0
 
