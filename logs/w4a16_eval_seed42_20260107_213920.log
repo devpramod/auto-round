@@ -1,0 +1,147 @@
+============================================================
+Multi-Iteration Evaluation Runner
+============================================================
+Model:      ./llama3.1_8b_int4/Llama-3.1-8B-w4g128/auto-round-auto-gptq
+Tasks:      lambada_openai,hellaswag,piqa
+Iterations: 5
+Batch Size: 16
+Seed:       42
+Log Samples:True
+Samples Dir:results/auto-round-auto-gptq_samples
+============================================================
+
+============================================================
+Iteration 1/5
+============================================================
+Running: auto-round --model ./llama3.1_8b_int4/Llama-3.1-8B-w4g128/auto-round-auto-gptq --eval --tasks lambada_openai,hellaswag,piqa --eval_bs 16 --seed 42 --log_samples --output_path results/auto-round-auto-gptq_samples/iter_1
+Error running evaluation:
+usage: auto-round [-h] [--model_name MODEL_NAME] [--mllm]
+                  [--device_map DEVICE_MAP] [--tasks TASKS]
+                  [--disable_trust_remote_code] [--seed SEED]
+                  [--eval_bs EVAL_BS] [--eval_task_by_task]
+                  [--eval_model_dtype EVAL_MODEL_DTYPE] [--limit N|0<N<1]
+                  [--eval_backend {hf,vllm}] [--add_bos_token]
+                  [--revision REVISION] [--tokenizer TOKENIZER]
+                  [--tokenizer_mode TOKENIZER_MODE]
+                  [--tokenizer_revision TOKENIZER_REVISION]
+                  [--prefix_token_id PREFIX_TOKEN_ID]
+                  [--tensor_parallel_size TENSOR_PARALLEL_SIZE]
+                  [--data_parallel_size DATA_PARALLEL_SIZE]
+                  [--quantization QUANTIZATION] [--max_gen_toks MAX_GEN_TOKS]
+                  [--swap_space SWAP_SPACE] [--max_batch_size MAX_BATCH_SIZE]
+                  [--max_length MAX_LENGTH] [--max_model_len MAX_MODEL_LEN]
+                  [--gpu_memory_utilization GPU_MEMORY_UTILIZATION]
+                  [--lora_local_path LORA_LOCAL_PATH]
+                  [model]
+auto-round: error: unrecognized arguments: --log_samples --output_path
+
+Warning: Iteration 1 returned no results
+
+============================================================
+Iteration 2/5
+============================================================
+Running: auto-round --model ./llama3.1_8b_int4/Llama-3.1-8B-w4g128/auto-round-auto-gptq --eval --tasks lambada_openai,hellaswag,piqa --eval_bs 16 --seed 42 --log_samples --output_path results/auto-round-auto-gptq_samples/iter_2
+Error running evaluation:
+usage: auto-round [-h] [--model_name MODEL_NAME] [--mllm]
+                  [--device_map DEVICE_MAP] [--tasks TASKS]
+                  [--disable_trust_remote_code] [--seed SEED]
+                  [--eval_bs EVAL_BS] [--eval_task_by_task]
+                  [--eval_model_dtype EVAL_MODEL_DTYPE] [--limit N|0<N<1]
+                  [--eval_backend {hf,vllm}] [--add_bos_token]
+                  [--revision REVISION] [--tokenizer TOKENIZER]
+                  [--tokenizer_mode TOKENIZER_MODE]
+                  [--tokenizer_revision TOKENIZER_REVISION]
+                  [--prefix_token_id PREFIX_TOKEN_ID]
+                  [--tensor_parallel_size TENSOR_PARALLEL_SIZE]
+                  [--data_parallel_size DATA_PARALLEL_SIZE]
+                  [--quantization QUANTIZATION] [--max_gen_toks MAX_GEN_TOKS]
+                  [--swap_space SWAP_SPACE] [--max_batch_size MAX_BATCH_SIZE]
+                  [--max_length MAX_LENGTH] [--max_model_len MAX_MODEL_LEN]
+                  [--gpu_memory_utilization GPU_MEMORY_UTILIZATION]
+                  [--lora_local_path LORA_LOCAL_PATH]
+                  [model]
+auto-round: error: unrecognized arguments: --log_samples --output_path
+
+Warning: Iteration 2 returned no results
+
+============================================================
+Iteration 3/5
+============================================================
+Running: auto-round --model ./llama3.1_8b_int4/Llama-3.1-8B-w4g128/auto-round-auto-gptq --eval --tasks lambada_openai,hellaswag,piqa --eval_bs 16 --seed 42 --log_samples --output_path results/auto-round-auto-gptq_samples/iter_3
+Error running evaluation:
+usage: auto-round [-h] [--model_name MODEL_NAME] [--mllm]
+                  [--device_map DEVICE_MAP] [--tasks TASKS]
+                  [--disable_trust_remote_code] [--seed SEED]
+                  [--eval_bs EVAL_BS] [--eval_task_by_task]
+                  [--eval_model_dtype EVAL_MODEL_DTYPE] [--limit N|0<N<1]
+                  [--eval_backend {hf,vllm}] [--add_bos_token]
+                  [--revision REVISION] [--tokenizer TOKENIZER]
+                  [--tokenizer_mode TOKENIZER_MODE]
+                  [--tokenizer_revision TOKENIZER_REVISION]
+                  [--prefix_token_id PREFIX_TOKEN_ID]
+                  [--tensor_parallel_size TENSOR_PARALLEL_SIZE]
+                  [--data_parallel_size DATA_PARALLEL_SIZE]
+                  [--quantization QUANTIZATION] [--max_gen_toks MAX_GEN_TOKS]
+                  [--swap_space SWAP_SPACE] [--max_batch_size MAX_BATCH_SIZE]
+                  [--max_length MAX_LENGTH] [--max_model_len MAX_MODEL_LEN]
+                  [--gpu_memory_utilization GPU_MEMORY_UTILIZATION]
+                  [--lora_local_path LORA_LOCAL_PATH]
+                  [model]
+auto-round: error: unrecognized arguments: --log_samples --output_path
+
+Warning: Iteration 3 returned no results
+
+============================================================
+Iteration 4/5
+============================================================
+Running: auto-round --model ./llama3.1_8b_int4/Llama-3.1-8B-w4g128/auto-round-auto-gptq --eval --tasks lambada_openai,hellaswag,piqa --eval_bs 16 --seed 42 --log_samples --output_path results/auto-round-auto-gptq_samples/iter_4
+Error running evaluation:
+usage: auto-round [-h] [--model_name MODEL_NAME] [--mllm]
+                  [--device_map DEVICE_MAP] [--tasks TASKS]
+                  [--disable_trust_remote_code] [--seed SEED]
+                  [--eval_bs EVAL_BS] [--eval_task_by_task]
+                  [--eval_model_dtype EVAL_MODEL_DTYPE] [--limit N|0<N<1]
+                  [--eval_backend {hf,vllm}] [--add_bos_token]
+                  [--revision REVISION] [--tokenizer TOKENIZER]
+                  [--tokenizer_mode TOKENIZER_MODE]
+                  [--tokenizer_revision TOKENIZER_REVISION]
+                  [--prefix_token_id PREFIX_TOKEN_ID]
+                  [--tensor_parallel_size TENSOR_PARALLEL_SIZE]
+                  [--data_parallel_size DATA_PARALLEL_SIZE]
+                  [--quantization QUANTIZATION] [--max_gen_toks MAX_GEN_TOKS]
+                  [--swap_space SWAP_SPACE] [--max_batch_size MAX_BATCH_SIZE]
+                  [--max_length MAX_LENGTH] [--max_model_len MAX_MODEL_LEN]
+                  [--gpu_memory_utilization GPU_MEMORY_UTILIZATION]
+                  [--lora_local_path LORA_LOCAL_PATH]
+                  [model]
+auto-round: error: unrecognized arguments: --log_samples --output_path
+
+Warning: Iteration 4 returned no results
+
+============================================================
+Iteration 5/5
+============================================================
+Running: auto-round --model ./llama3.1_8b_int4/Llama-3.1-8B-w4g128/auto-round-auto-gptq --eval --tasks lambada_openai,hellaswag,piqa --eval_bs 16 --seed 42 --log_samples --output_path results/auto-round-auto-gptq_samples/iter_5
+Error running evaluation:
+usage: auto-round [-h] [--model_name MODEL_NAME] [--mllm]
+                  [--device_map DEVICE_MAP] [--tasks TASKS]
+                  [--disable_trust_remote_code] [--seed SEED]
+                  [--eval_bs EVAL_BS] [--eval_task_by_task]
+                  [--eval_model_dtype EVAL_MODEL_DTYPE] [--limit N|0<N<1]
+                  [--eval_backend {hf,vllm}] [--add_bos_token]
+                  [--revision REVISION] [--tokenizer TOKENIZER]
+                  [--tokenizer_mode TOKENIZER_MODE]
+                  [--tokenizer_revision TOKENIZER_REVISION]
+                  [--prefix_token_id PREFIX_TOKEN_ID]
+                  [--tensor_parallel_size TENSOR_PARALLEL_SIZE]
+                  [--data_parallel_size DATA_PARALLEL_SIZE]
+                  [--quantization QUANTIZATION] [--max_gen_toks MAX_GEN_TOKS]
+                  [--swap_space SWAP_SPACE] [--max_batch_size MAX_BATCH_SIZE]
+                  [--max_length MAX_LENGTH] [--max_model_len MAX_MODEL_LEN]
+                  [--gpu_memory_utilization GPU_MEMORY_UTILIZATION]
+                  [--lora_local_path LORA_LOCAL_PATH]
+                  [model]
+auto-round: error: unrecognized arguments: --log_samples --output_path
+
+Warning: Iteration 5 returned no results
+Error: No successful evaluations!

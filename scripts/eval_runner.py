@@ -34,60 +34,57 @@ def parse_eval_output(output: str) -> dict:
     """
     results = {}
     lines = output.strip().split('\n')
+    current_task = None
 
-    # Find table lines (contain | separators)
-    in_table = False
     for line in lines:
         if '|' not in line:
             continue
 
-        # Skip header separator lines
-        if set(line.replace('|', '').replace('-', '').replace(' ', '').replace('+', '')) == set():
-            in_table = True
+        # Skip header/separator lines
+        if '---' in line or 'Tasks' in line or 'Metric' in line:
             continue
 
-        if not in_table:
-            continue
-
-        # Parse table row
+        # Parse table row - keep empty parts for position tracking
         parts = [p.strip() for p in line.split('|')]
-        parts = [p for p in parts if p]  # Remove empty parts
 
-        if len(parts) < 4:
+        if len(parts) < 8:
             continue
 
-        # Expected format: Task | Version | Filter | Metric | Value | Stderr
-        # Or: Task | Filter | Metric | Value | Stderr
-        task = parts[0]
+        # lm-eval format: |Task|Version|Filter|n-shot|Metric|↑/↓|Value|±|Stderr|
+        # parts[0] is empty (before first |), so task is parts[1]
+        task = parts[1]
+        if task and task.lower() not in ('tasks', 'task', 'groups', '-', ''):
+            current_task = task
 
-        # Skip if task looks like a header
-        if task.lower() in ('tasks', 'task', 'groups', '-'):
+        if not current_task:
             continue
 
-        # Find metric and value columns
-        for i, part in enumerate(parts):
-            if part in ('acc', 'acc_norm', 'perplexity', 'word_perplexity', 'byte_perplexity', 'bits_per_byte'):
-                try:
-                    metric = part
-                    value = float(parts[i + 1])
+        # Find metric (usually parts[5]) and value (parts[7])
+        metric = parts[5] if len(parts) > 5 else ''
+        value_str = parts[7] if len(parts) > 7 else ''
 
-                    if task not in results:
-                        results[task] = {}
-                    results[task][metric] = value
-                except (IndexError, ValueError):
-                    continue
+        if metric in ('acc', 'acc_norm', 'perplexity', 'word_perplexity', 'byte_perplexity', 'bits_per_byte'):
+            try:
+                value = float(value_str)
+                if current_task not in results:
+                    results[current_task] = {}
+                results[current_task][metric] = value
+            except (ValueError, TypeError):
+                continue
 
     return results
 
 
-def run_single_eval(model_path: str, tasks: str, batch_size: int = 16) -> dict:
+def run_single_eval(model_path: str, tasks: str, batch_size: int = 16,
+                    seed: int = 42) -> dict:
     """Run a single evaluation and return parsed results."""
     cmd = [
         "auto-round",
         "--model", model_path,
         "--eval",
         "--tasks", tasks,
-        "--eval_bs", str(batch_size)
+        "--eval_bs", str(batch_size),
+        "--seed", str(seed)
     ]
 
     print(f"Running: {' '.join(cmd)}")
@@ -173,6 +170,12 @@ def main():
         default="eval_results.json",
         help="Output JSON file for results"
     )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="Random seed for reproducibility (default: 42)"
+    )
     args = parser.parse_args()
 
     print("=" * 60)
@@ -182,6 +185,7 @@ def main():
     print(f"Tasks:      {args.tasks}")
     print(f"Iterations: {args.iterations}")
     print(f"Batch Size: {args.batch_size}")
+    print(f"Seed:       {args.seed}")
     print("=" * 60)
 
     # Collect results from all iterations
@@ -192,7 +196,10 @@ def main():
         print(f"Iteration {i + 1}/{args.iterations}")
         print("=" * 60)
 
-        results = run_single_eval(args.model, args.tasks, args.batch_size)
+        results = run_single_eval(
+            args.model, args.tasks, args.batch_size,
+            seed=args.seed
+        )
         if results:
             all_results.append(results)
             print(f"Iteration {i + 1} results: {results}")

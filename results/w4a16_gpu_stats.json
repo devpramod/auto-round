@@ -1,0 +1,149 @@
+{
+  "timestamp": "2026-01-07T22:49:46.970667",
+  "config": {
+    "model": "./llama3.1_8b_int4/Llama-3.1-8B-w4g128/auto-round-auto-gptq",
+    "tasks": "lambada_openai,hellaswag,piqa",
+    "iterations": 5,
+    "batch_size": 16
+  },
+  "raw_results": [
+    {
+      "hellaswag": {
+        "acc": 0.5941,
+        "acc_norm": 0.7837
+      },
+      "lambada_openai": {
+        "acc": 0.724,
+        "perplexity": 3.4083
+      },
+      "piqa": {
+        "acc": 0.7922,
+        "acc_norm": 0.8058
+      }
+    },
+    {
+      "hellaswag": {
+        "acc": 0.5941,
+        "acc_norm": 0.7837
+      },
+      "lambada_openai": {
+        "acc": 0.724,
+        "perplexity": 3.4083
+      },
+      "piqa": {
+        "acc": 0.7922,
+        "acc_norm": 0.8058
+      }
+    },
+    {
+      "hellaswag": {
+        "acc": 0.5941,
+        "acc_norm": 0.7837
+      },
+      "lambada_openai": {
+        "acc": 0.724,
+        "perplexity": 3.4083
+      },
+      "piqa": {
+        "acc": 0.7922,
+        "acc_norm": 0.8058
+      }
+    },
+    {
+      "hellaswag": {
+        "acc": 0.5941,
+        "acc_norm": 0.7837
+      },
+      "lambada_openai": {
+        "acc": 0.724,
+        "perplexity": 3.4083
+      },
+      "piqa": {
+        "acc": 0.7922,
+        "acc_norm": 0.8058
+      }
+    },
+    {
+      "hellaswag": {
+        "acc": 0.5941,
+        "acc_norm": 0.7837
+      },
+      "lambada_openai": {
+        "acc": 0.724,
+        "perplexity": 3.4083
+      },
+      "piqa": {
+        "acc": 0.7922,
+        "acc_norm": 0.8058
+      }
+    }
+  ],
+  "statistics": {
+    "hellaswag": {
+      "acc": {
+        "mean": 0.5941,
+        "median": 0.5941,
+        "p90": 0.5941,
+        "p99": 0.5941,
+        "std": 0.0,
+        "min": 0.5941,
+        "max": 0.5941,
+        "n": 5
+      },
+      "acc_norm": {
+        "mean": 0.7837,
+        "median": 0.7837,
+        "p90": 0.7837,
+        "p99": 0.7837,
+        "std": 0.0,
+        "min": 0.7837,
+        "max": 0.7837,
+        "n": 5
+      }
+    },
+    "lambada_openai": {
+      "acc": {
+        "mean": 0.724,
+        "median": 0.724,
+        "p90": 0.724,
+        "p99": 0.724,
+        "std": 0.0,
+        "min": 0.724,
+        "max": 0.724,
+        "n": 5
+      },
+      "perplexity": {
+        "mean": 3.4082999999999997,
+        "median": 3.4083,
+        "p90": 3.4083,
+        "p99": 3.4083,
+        "std": 4.440892098500626e-16,
+        "min": 3.4083,
+        "max": 3.4083,
+        "n": 5
+      }
+    },
+    "piqa": {
+      "acc": {
+        "mean": 0.7922,
+        "median": 0.7922,
+        "p90": 0.7922,
+        "p99": 0.7922,
+        "std": 0.0,
+        "min": 0.7922,
+        "max": 0.7922,
+        "n": 5
+      },
+      "acc_norm": {
+        "mean": 0.8058,
+        "median": 0.8058,
+        "p90": 0.8058,
+        "p99": 0.8058,
+        "std": 0.0,
+        "min": 0.8058,
+        "max": 0.8058,
+        "n": 5
+      }
+    }
+  }
+}

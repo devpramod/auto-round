@@ -10,3 +10,12 @@ dist/
 CMakeUserPresets.json
 tmp_autoround/
 ut_log_dir/
+
+# Virtual environments
+.venv/
+venv/
+
+# Quantized model weights
+llama3.1_8b_int4/
+*_int4/
+*_int8/
