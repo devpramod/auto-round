@@ -44,7 +44,7 @@ def get_ssh_args(cfg: dict) -> list:
 
     # Proxy/jump host support
     if conn.get("proxy"):
-        ssh_args.extend(["-J", conn["proxy"]])
+        ssh_args.extend(["-o", f"ProxyCommand={conn['proxy']}"])
 
     target = f"{conn['user']}@{conn['host']}"
     ssh_args.append(target)
@@ -91,6 +91,9 @@ def scp_download(cfg: dict, remote_path: str, local_path: str) -> bool:
 
     if conn.get("port", 22) != 22:
         scp_args.extend(["-P", str(conn["port"])])
+
+    if conn.get("proxy"):
+        scp_args.extend(["-o", f"ProxyCommand={conn['proxy']}"])
 
     source = f"{conn['user']}@{conn['host']}:{remote_path}"
     scp_args.extend(["-r", source, local_path])
