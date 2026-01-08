@@ -30,10 +30,14 @@ def load_config(config_path: str) -> dict:
         return yaml.safe_load(f)
 
 
-def get_ssh_args(cfg: dict) -> list:
+def get_ssh_args(cfg: dict, background: bool = False) -> list:
     """Build SSH argument list from config."""
     conn = cfg["connection"]
     ssh_args = ["ssh", "-o", "StrictHostKeyChecking=no"]
+
+    # -f: fork to background after auth (for fire-and-forget commands)
+    if background:
+        ssh_args.append("-f")
 
     if conn.get("key_file"):
         key_path = Path(conn["key_file"]).expanduser()
@@ -273,9 +277,10 @@ def submit_job(cfg: dict, model: str, job_id: str, dry_run: bool = False, watch:
     print("\nSubmitting job...")
 
     if watch:
-        # Submit in background, then stream logs
-        result = ssh_cmd(cfg, cmd, capture=True)
-        print(result.stdout)
+        # Submit in background (ssh -f returns immediately), then stream logs
+        ssh_args = get_ssh_args(cfg, background=True) + [cmd]
+        subprocess.run(ssh_args)
+        print("Job submitted")
 
         # Give it a moment to start
         time.sleep(2)
@@ -294,7 +299,8 @@ def submit_job(cfg: dict, model: str, job_id: str, dry_run: bool = False, watch:
         status = check_job_status(cfg, job_id)
         if status == "running":
             print("\n[Job still running in background]")
-            return True
+            print(f"Re-attach with: python demo.py <config.yaml> --logs {job_id}")
+            return "running"  # Signal to main() not to show completion
         else:
             print("\n[Job completed]")
             return True
@@ -426,12 +432,16 @@ def main():
         print()
 
     # Submit job
-    success = submit_job(cfg, model, job_id, dry_run=args.dry_run, watch=args.watch)
+    result = submit_job(cfg, model, job_id, dry_run=args.dry_run, watch=args.watch)
 
     if args.dry_run:
         return 0
 
-    if not success:
+    if result == "running":
+        # User detached but job still running - don't show completion
+        return 0
+
+    if not result:
         print("\nJob failed!")
         return 1
 
