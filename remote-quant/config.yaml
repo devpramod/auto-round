@@ -1,0 +1,40 @@
+# Remote Quantization Config - Self-SSH Test
+
+# Connection settings
+connection:
+  host: "localhost"
+  user: "root"
+  port: 1234
+  key_file: ""                    # SSH key path (optional if using ssh-agent)
+  proxy: ""                       # SSH proxy/jump host (optional)
+
+# Model settings
+model:
+  model_id: "meta-llama/Llama-3.1-8B"   # Default model to quantize
+  hf_token: ""  # Set your HuggingFace token
+
+# Quantization settings (auto-round options)
+quantization:
+  recipe: "light"                 # "light" or "default"
+  scheme: "W4A16"                 # W4A16, W8A8, etc.
+  format: "auto_round,auto_gptq"  # Output formats
+  group_size: 128                 # Quantization group size
+  iters: 50                       # Number of tuning iterations (lower = faster)
+
+# Remote paths (on GPU server)
+remote_paths:
+  working_dir: "~/remote-quant"
+  venv: "~/remote-quant/.venv"
+  output_dir: "./output"
+  log_dir: "./logs"
+
+# Local paths (on this machine)
+local:
+  output_dir: "./models"
+  state_file: "./.remote-quant-state.json"
+
+# Transfer settings
+transfer:
+  compress: true
+  compression_threads: 4
+  cleanup_remote: false

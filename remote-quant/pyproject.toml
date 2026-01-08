@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "remote-quant"
+version = "0.1.0"
+description = "Remote GPU quantization orchestrator for auto-round"
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.0",
+    "paramiko>=3.0",
+    "pyyaml>=6.0",
+    "rich>=13.0",
+]
+
+[project.scripts]
+remote-quant = "remote_quant.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
