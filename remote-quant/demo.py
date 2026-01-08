@@ -292,7 +292,23 @@ def submit_job(cfg: dict, model: str, job_id: str, dry_run: bool = False, watch:
 
         paths = cfg["remote_paths"]
         working_dir = expand_remote_path(paths["working_dir"])
-        tail_cmd = f"cd {working_dir} && tail -f {log_file}"
+        output_dir = f"{paths['output_dir']}/{job_id}"
+        if output_dir.startswith("./"):
+            output_dir = output_dir[2:]
+
+        # Use tail --pid to auto-exit when job completes, then show completion message
+        tail_cmd = f"""cd {working_dir} && \\
+PID=$(pgrep -f "auto-round.*{job_id}" | head -1) ; \\
+tail -f --pid=$PID {log_file} 2>/dev/null ; \\
+echo "" ; \\
+echo "Saving model to disk..." ; \\
+sleep 3 ; \\
+echo "" ; \\
+echo "============================================================" ; \\
+echo "COMPLETE! Model saved to:" ; \\
+echo "  {working_dir}/{output_dir}/" ; \\
+echo "============================================================"
+"""
         ssh_cmd(cfg, tail_cmd, stream=True)
 
         # Check if job is still running
@@ -322,13 +338,28 @@ def stream_logs(cfg: dict, job_id: str):
     paths = cfg["remote_paths"]
     working_dir = expand_remote_path(paths["working_dir"])
     log_file = f"{paths.get('log_dir', './logs')}/quant_{job_id}.log"
+    output_dir = f"{paths['output_dir']}/{job_id}"
+    if output_dir.startswith("./"):
+        output_dir = output_dir[2:]
 
     print(f"Streaming logs from: {log_file}")
     print("=" * 60)
     print("(Ctrl+C to stop)")
     print("=" * 60 + "\n")
 
-    tail_cmd = f"cd {working_dir} && tail -f {log_file}"
+    # Use tail --pid to auto-exit when job completes
+    tail_cmd = f"""cd {working_dir} && \\
+PID=$(pgrep -f "auto-round.*{job_id}" | head -1) ; \\
+tail -f --pid=$PID {log_file} 2>/dev/null ; \\
+echo "" ; \\
+echo "Saving model to disk..." ; \\
+sleep 3 ; \\
+echo "" ; \\
+echo "============================================================" ; \\
+echo "COMPLETE! Model saved to:" ; \\
+echo "  {working_dir}/{output_dir}/" ; \\
+echo "============================================================"
+"""
     ssh_cmd(cfg, tail_cmd, stream=True)
 
 
