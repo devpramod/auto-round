@@ -311,15 +311,8 @@ echo "============================================================"
 """
         ssh_cmd(cfg, tail_cmd, stream=True)
 
-        # Check if job is still running
-        status = check_job_status(cfg, job_id)
-        if status == "running":
-            print("\n[Job still running in background]")
-            print(f"Re-attach with: python demo.py <config.yaml> --logs {job_id}")
-            return "running"  # Signal to main() not to show completion
-        else:
-            print("\n[Job completed]")
-            return True
+        # tail --pid exits when job finishes, so we know it's done
+        return True
     else:
         # Run in foreground
         result = ssh_cmd(cfg, cmd)
