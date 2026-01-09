@@ -8,7 +8,9 @@ Quantize Llama 3.1 8B to W4A16, compare eval accuracy between GPU (NVIDIA A6000)
 ### Environment
 ```bash
 cd /root/auto-round
-source .venv/bin/activate
+source .venv/bin/activate          # Main auto-round env
+# OR
+source venv-eval/bin/activate       # vLLM eval env (locked deps)
 ```
 
 ### Quantize (auto-round-light)
@@ -24,7 +26,19 @@ auto-round-light \
     --output_dir ./llama3.1_8b_int4
 ```
 
-### Evaluate
+### Evaluate (vLLM Backend - Recommended)
+```bash
+# GPU evaluation (5 iterations)
+./vllm_accuracy_eval/scripts/eval_vllm.sh gpu 5
+
+# CPU evaluation (5 iterations)
+./vllm_accuracy_eval/scripts/eval_vllm.sh cpu 5
+
+# Compare GPU vs CPU
+python vllm_accuracy_eval/scripts/compare_results.py
+```
+
+### Evaluate (Legacy HF Backend)
 ```bash
 # Single eval
 auto-round --eval \
@@ -75,6 +89,18 @@ ps aux | grep -E "(auto-round|python)"
 | `scripts/run_baseline_eval.sh` | Baseline BF16 evaluation |
 | `scripts/eval_runner.py` | Multi-iteration eval with statistics |
 
+### vLLM Evaluation Scripts (Reproducible)
+| Script | Description |
+|--------|-------------|
+| `vllm_accuracy_eval/scripts/eval_vllm.sh` | Shell wrapper for GPU/CPU eval |
+| `vllm_accuracy_eval/scripts/eval_runner_vllm.py` | Unified vLLM multi-iteration eval |
+| `vllm_accuracy_eval/scripts/compare_results.py` | GPU vs CPU comparison report |
+| `vllm_accuracy_eval/scripts/setup_env.sh` | Create reproducible venv |
+| `vllm_accuracy_eval/scripts/verify_environment.py` | Pre-flight environment check |
+| `vllm_accuracy_eval/scripts/snapshot_datasets.sh` | Archive eval datasets |
+
+See `vllm_accuracy_eval/README.md` for full documentation.
+
 ## Output Directory
 ```
 llama3.1_8b_int4/
@@ -90,19 +116,32 @@ llama3.1_8b_int4/
 ### Phase 1: GPU Quantization and Evaluation
 - [x] Setup environment (venv, auto-round, lm-eval)
 - [ ] Run baseline BF16 eval (3 tasks)
-- [ ] Quantize with auto-round-light
-- [ ] Run 5-iteration GPU eval with statistics
+- [x] Quantize with auto-round-light (W4A16, GPTQ format)
+- [x] Create vLLM evaluation infrastructure (`vllm_accuracy_eval/`)
+- [x] Setup reproducible eval environment (venv-eval, locked deps)
+- [ ] Run 5-iteration GPU vLLM eval with statistics (in progress)
 - [ ] Document results (mean, median, P90, P99)
 
 ### Phase 2: vLLM CPU Inference
-- [ ] Load quantized model with vLLM on Intel Xeon
-- [ ] Run same 3 eval tasks on CPU
-- [ ] Compare accuracy: GPU vs CPU
+- [ ] Transfer to Intel Xeon machine
+- [ ] Run 5-iteration CPU vLLM eval
+- [ ] Generate comparison report
 
 ### Phase 3: Analysis
 - [ ] Document accuracy delta (BF16 vs W4A16)
 - [ ] Verify consistency across iterations
 - [ ] Compare GPU vs CPU eval results
+
+## Environment Info (venv-eval)
+
+Locked versions for reproducibility:
+- vLLM: 0.13.0
+- lm-eval: 0.4.9.2
+- PyTorch: 2.9.0
+- transformers: 4.57.3
+- accelerate: 1.12.0
+
+See `vllm_accuracy_eval/requirements-eval.txt` for complete list.
 
 ## Reference
 - [AutoRound Paper](https://arxiv.org/pdf/2309.05516)

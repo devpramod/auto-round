@@ -1,0 +1,33 @@
+# Locked requirements for reproducible vLLM evaluation
+# Generated for GPU/CPU accuracy comparison
+# Updated: 2026-01-09
+#
+# Usage:
+#   pip install -r vllm_accuracy_eval/requirements-eval.txt
+
+# Core evaluation dependencies
+lm_eval==0.4.9.2
+vllm==0.13.0
+
+# Model loading
+transformers==4.57.3
+accelerate==1.12.0
+safetensors==0.7.0
+tokenizers==0.22.2
+
+# Data handling
+datasets==4.4.2
+huggingface-hub==0.36.0
+
+# Numerical
+numpy==2.2.6
+
+# PyTorch (installed by vllm)
+torch==2.9.0
+
+# Additional dependencies
+sentencepiece==0.2.1
+protobuf==6.33.2
+
+# AutoRound (install from local source)
+# pip install -e /path/to/auto-round
