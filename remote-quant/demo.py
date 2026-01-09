@@ -155,6 +155,16 @@ echo "Creating directory: $WORKING_DIR"
 mkdir -p "$WORKING_DIR"
 cd "$WORKING_DIR"
 
+# Install pigz for faster compression (optional, continue if fails)
+echo "Installing pigz for faster compression..."
+if command -v apt-get &> /dev/null; then
+    sudo apt-get install -y pigz 2>/dev/null || echo "  (skipped - no sudo or apt)"
+elif command -v yum &> /dev/null; then
+    sudo yum install -y pigz 2>/dev/null || echo "  (skipped - no sudo or yum)"
+else
+    echo "  (skipped - no apt/yum found)"
+fi
+
 echo "Creating virtual environment..."
 python3 -m venv "$VENV_PATH"
 source "$VENV_PATH/bin/activate"
