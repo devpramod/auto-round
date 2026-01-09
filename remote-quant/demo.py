@@ -412,6 +412,9 @@ def transfer_weights(cfg: dict, job_id: str, remote_archive: str) -> bool:
         print("Extracting...")
         subprocess.run(["tar", "-xzf", str(local_path), "-C", str(local_dir)])
         print(f"Extracted to: {local_dir}/{job_id}")
+        # Cleanup tar file
+        local_path.unlink()
+        print(f"Cleaned up: {local_path.name}")
 
     return success
 
