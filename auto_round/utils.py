@@ -45,7 +45,7 @@ class ParamWrapper(torch.nn.Module):
         super().__init__()
         self.weight = param
         
-supported_layer_types = (torch.nn.Linear, transformers.modeling_utils.Conv1D,  ParamWrapper)
+supported_layer_types = (torch.nn.Linear, transformers.pytorch_utils.Conv1D,  ParamWrapper)
 
 
 @lru_cache(None)
@@ -773,7 +773,7 @@ def check_memory_availability(device, inputs, weight, org_seqlen, org_bs):
 
 
 def get_layer_names_in_block(model, supported_types=(torch.nn.Linear,
-                                                     transformers.modeling_utils.Conv1D, ParamWrapper), quant_block_list=None):
+                                                     transformers.pytorch_utils.Conv1D, ParamWrapper), quant_block_list=None):
     """Retrieves the names of layers within each block of the model.
 
     Returns:
@@ -1067,7 +1067,7 @@ def get_fp_layer_names(model, fp_layers):
     fp_layers = fp_layers.replace(" ", "").split(",")
     all_layer_names = []
     for n, m in model.named_modules():
-        if isinstance(m, (torch.nn.Linear, transformers.modeling_utils.Conv1D, ParamWrapper)):
+        if isinstance(m, (torch.nn.Linear, transformers.pytorch_utils.Conv1D, ParamWrapper)):
             all_layer_names.append(n)
     not_to_quantized_layers = []
 
@@ -1105,7 +1105,7 @@ def check_awq_gemm_compatibility(model, bits, group_size, sym, layer_configs=Non
     if bits != 4:
         return False, f"AutoAWQ GEMM kernel only supports 4 bits"
     for n, m in model.named_modules():
-        if isinstance(m, transformers.modeling_utils.Conv1D):
+        if isinstance(m, transformers.pytorch_utils.Conv1D):
             return False, "AutoAWQ GEMM kernel does not support conv1d"
 
     layer_names = get_layer_names_in_block(model)
@@ -1145,8 +1145,9 @@ def translate_2_sglang_int8(model):
     state_dict = model.state_dict()
     count=0
     state_list = list(state_dict.keys())
-    llama4_model_type = "llama4" in str(model.__class__.__name__).lower()
-    if llama4_model_type:
+    model_class_name = str(model.__class__.__name__).lower()
+    moe_model_type = "llama4" in model_class_name or "glm" in model_class_name
+    if moe_model_type:
         for name in state_list:
             if ".experts." in name and "_fake" not in name:
                 state_dict.pop(name, None)
@@ -1156,7 +1157,7 @@ def translate_2_sglang_int8(model):
             count+=1
             state_dict[f"{name}.weight_scale"] = module.weight_scale
             state_dict[f"{name}.weight"] = state_dict[f"{name}.weight"].to(torch.int8)
-            if llama4_model_type:
+            if moe_model_type:
                 gc.collect()
     print(f"quantized_count: {count}")
     
@@ -1165,7 +1166,7 @@ def translate_2_sglang_int8(model):
     from tqdm import tqdm
     state_list = list(state_dict.keys())
     for name in tqdm(state_list):
-        if llama4_model_type and name.endswith("_fake.weight"):
+        if moe_model_type and name.endswith("_fake.weight"):
             weight = state_dict[name]
             if weight.dim() != 3:
                 continue  # skip any unexpected format
@@ -1197,7 +1198,7 @@ def translate_2_sglang_int8(model):
             state_dict.pop(name, None)
             state_dict.pop(scale_name, None)
             gc.collect()
-        elif not llama4_model_type or ".experts." not in name:
+        elif not moe_model_type or ".experts." not in name:
             new_state_dict[name] = state_dict[name]
         else:
             continue
